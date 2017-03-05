@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title></title>
+
+  <style media="screen">
+    .box {
+      background-color: pink;
+      width: 250px;
+      height: 250px;
+    }
+  </style>
+
+</head>
+<body>
+
+  <div id="app1">
+    <p>Показываем и скрываем квадрат</p>
+    <button @click="show = !show">Кнопка скрыть/показать квадрат</button>
+    <div class="box" v-show="show"></div>
+  </div>
+
+  <div id="app2">
+    <p>Создаем и удаляем квадрат</p>
+    <button @click="show = !show">Кнопка создать/удалить квадрат</button>
+    <div class="box" v-if="show"></div>
+    <div v-else>Пусто</div>
+  </div>
+
+
+  <script src="https://unpkg.com/vue"></script>
+
+  <script>
+
+    new Vue({
+      el: "#app1",
+      data: {
+        show: false
+      }
+    });
+
+    new Vue({
+      el: "#app2",
+      data: {
+        show: false
+      }
+    })
+
+  </script>
+
+</body>
+</html>
