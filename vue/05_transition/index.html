@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Transition</title>
+
+  <link rel="stylesheet" href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app">
+
+    <header>
+      <button @click="show = !show">
+        <i class="ion-navicon"></i>
+      </button>
+    </header>
+
+    <aside v-show="show" transition='slide'></aside>
+
+  </div>
+  <script src="https://unpkg.com/vue"></script>
+
+  <script>
+
+    new Vue({
+      el: "#app",
+      data: {
+        show: false
+      }
+    });
+
+
+
+  </script>
+
+</body>
+</html>
