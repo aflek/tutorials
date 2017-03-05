@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Vue.js - hello world</title>
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div id="app">
+    <ul>
+      <li v-for="bear in bears" v-bind:class="{ 'strike': bear.status}">{{ bear.name }}</li>
+    </ul>
+  </div>
+
+  <script src="https://unpkg.com/vue"></script>
+
+  <script>
+
+    new Vue({
+      el: "#app",
+      data: {
+        bears: [
+          {
+            name: 'гризли',
+            status: false
+          },
+          {
+            name: 'белый',
+            status: false
+          },
+          {
+            name: 'панда',
+            status: true
+          },
+          {
+            name: 'губач',
+            status: false
+          }
+        ]
+      }
+    })
+  </script>
+
+</body>
+</html>
