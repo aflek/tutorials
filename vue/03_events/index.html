@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Vue.js - hello world</title>
+
+
+</head>
+<body>
+  <div>
+    <div id="button_1">
+      <p>Вывод в консоль:</p>
+      <button v-on:click="onClick">Кнопка 1: Вывод в консоль</button>
+    </div>
+
+    <div id="button_2">
+      <form action="">
+        <p>Вывод в консоль без перезагрузки формы вариант 1:</p>
+        <button v-on:click="onClick">Кнопка 2: Вывод в консоль</button>
+      </form>
+    </div>
+
+    <div id="button_3">
+      <form action="">
+        <p>Вывод в консоль без перезагрузки формы, вариант 2:</p>
+        <button v-on:click.prevent="onClick">Кнопка 3: Вывод в консоль</button>
+      </form>
+    </div>
+
+    <div id="input_example">
+      <p>Вводим текст, жмем Enter и введенный текст выводится в консоль:</p>
+      <input type="text" v-model="message" v-on:keyup.enter="onClick">
+    </div>
+
+  </div>
+
+  <script src="https://unpkg.com/vue"></script>
+
+  <script>
+
+    new Vue({
+      el: "#button_1",
+      methods: {
+        onClick: function() {
+          console.log('Нажата кнопка 1')
+        }
+      },
+    });
+    new Vue({
+      el: "#button_2",
+      methods: {
+        onClick: function(e) {
+          //Блокируем перезагрузку формы:
+          e.preventDefault()
+          console.log('Нажата кнопка 2')
+        }
+      },
+    });
+    new Vue({
+      el: "#button_3",
+      methods: {
+        onClick: function() {
+          //Блокируем перезагрузку формы - в верстке задаем click.prevent:
+          console.log('Нажата кнопка 3')
+        }
+      },
+    });
+    new Vue({
+      el: "#input_example",
+      data: {
+        message: ''
+      },
+      methods: {
+        onClick: function() {
+          console.log(this.message)
+        }
+      },
+    })
+  </script>
+
+</body>
+</html>
