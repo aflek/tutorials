@@ -1,34 +1,45 @@
 Vue.component('datepicker', {
-  template: '<div class="datepicker-wrap">'
-
-  + '<div class="datepicker" :style="{width:width+\'px\'}">'
-  + '  <input :value="value" readonly :disabled="disabled" :class="{focus:show}" @click="click" @mousedown="$event.preventDefault()"/>'
-  + '  <a v-if="clearable&&value" @click.stop="clear"></a>'
-  + '  <i @click="click"></i>'
-  + '  <div class="datepicker-popup" :class="{\'datepicker-popup-left\':left}" v-if="show" transition="datepicker-popup" tabindex="-1" @blur="show = false" @mousedown="$event.preventDefault()" @keyup.up="changeMonth(-1,1)" @keyup.down="changeMonth(1,1)" @keyup.left="changeYear(-1,1)" @keyup.right="changeYear(1,1)" ref="popup">'
+  template: '\
+  <div class="datepicker-wrap">\
+      <div class="datepicker" :style="{width:width+\'px\'}">\
+          <input\
+             ref="input"\
+             :value="value"\
+             readonly\
+             :disabled="disabled"\
+             :class="{focus:show}"\
+             @click="click"\
+             @mousedown="$event.preventDefault()"/>\
+      <a v-if="clearable&&value" @click.stop="clear"></a>\
+      <i @click="click"></i>\
+      <div class="datepicker-popup" :class="{\'datepicker-popup-left\':left}"\
+           v-if="show" transition="datepicker-popup" tabindex="-1" @blur="onBlur(1)" @mousedown="$event.preventDefault()"  @keyup.up="changeMonth(-1,1)" @keyup.down="changeMonth(1,1)" @keyup.left="changeYear(-1,1)" @keyup.right="changeYear(1,1)" ref="popup">'
   //+ '     <div class="calendar-top" v-if="range">'
   //+ '        <template v-for="item in ranges">'
   //+ '           <i v-if="$index"></i><a v-text="item.name" @click="selectRange(item)"></a>'
   //+ '        </template>'
   //+ '     </div>'//calendar-top
-  + '     <div :class="{\'calendar-range\':range}">'
-  + '       <template v-for="no in count">'//Цикл для вывода нескольких календарей
-  + '         <div class="calendar">'
-  + '           <div class="calendar-header">'
-  + '             <a class="calendar-prev-year" :title="prevYearTitle" @click="changeYear(-1,no)">«</a>'
-  + '             <a class="calendar-prev-month" :title="prevMonthTitle" @click="changeMonth(-1,no)">‹</a>'
-  + '             <a class="calendar-year-select" :title="selectYearTitle" @click="showYear(no)">{{strYear(no)}}</a>'
-  + '             <a class="calendar-month-select" :title="selectMonthTitle" @click="showMonth(no)">{{strMonth(no)}}</a>'
-  + '             <a class="calendar-next-month" :title="nextMonthTitle" @click="changeMonth(1,no)">›</a>'
-  + '             <a class="calendar-next-year" :title="nextYearTitle" @click="changeYear(1,no)">»</a>'
-  + '           </div>'//calendar-header
-  + '           <table cellspacing="0" cellpadding="0">'
-  + '              <tr><th v-for="day in days" v-text="day"></th></tr>'
-  + '              <tr v-if="getDateArray(no)" v-for="i in 6">'
-//<td v-for="j in 7" v-text="this[\'date\'+(no+1)][i * 7 + j].text" :title="this[\'date\'+(no+1)][i * 7 + j].title" :class="this[\'date\'+(no+1)][i * 7 + j].status" @click="select(this[\'date\'+(no+1)][i * 7 + j], no+1)"></td>'
-  + '                 <td v-for="j in 7" v-text="getDateArrayElementText(no,i,j)" :title="getDateArrayElementTitle(no,i,j)" :class="getDateArrayElementStatus(no,i,j)" @click="select(no,i,j)"></td>'
-  + '              </tr>'
-  + '           </table>'
+  + '     <div :class="{\'calendar-range\':range}">\
+             <template v-for="no in count">\
+                <div class="calendar">\
+                   <div class="calendar-header">\
+                      <a class="calendar-prev-year" :title="prevYearTitle" @click="changeYear(-1,no)">«</a>\
+                      <a class="calendar-prev-month" :title="prevMonthTitle" @click="changeMonth(-1,no)">‹</a>\
+                      <a class="calendar-year-select" :title="selectYearTitle" @click="showYear(no)">{{strYear(no)}}</a>\
+                      <a class="calendar-month-select" :title="selectMonthTitle" @click="showMonth(no)">{{strMonth(no)}}</a>\
+                      <a class="calendar-next-month" :title="nextMonthTitle" @click="changeMonth(1,no)">›</a>\
+                      <a class="calendar-next-year" :title="nextYearTitle" @click="changeYear(1,no)">»</a>\
+                   </div>\
+                   <table cellspacing="0" cellpadding="0">\
+                      <tr><th v-for="day in days" v-text="day"></th></tr>\
+                      <tr v-if="getDateArray(no)" v-for="i in 6">\
+                         <td v-for="j in 7"\
+                             v-text="getDateArrayElementText(no,i,j)"\
+                             :title="getDateArrayElementTitle(no,i,j)"\
+                             :class="getDateArrayElementStatus(no,i,j)"\
+                             @click="select(no,i,j)"></td>\
+                      </tr>\
+                  </table>'
 //TODO вывод панеле выбора года и месяца
 //  + '           <div class="calendar-year-panel" transition="calendar-panel" v-if="this[\'showYear\'+(no+1)]">'
 //  + '           <div class="calendar-year-panel" transition="calendar-panel" v-if="isShowYear(no)">'
@@ -37,9 +48,9 @@ Vue.component('datepicker', {
 //  + '           </div>'
 //  + '           <div class="calendar-month-panel" transition="calendar-panel" v-if="this[\'showMonth\'+(no+1)]"><a v-for="item in this[\'months\'+(no+1)]" class="calendar-month-panel-month" :class="item.status" @click="selectMonth(item,no+1)">{{months[item.month-1].substr(0,3)}}</a>'
 //  + '            </div>'
+//  + '            </div>'
   + '          </div>'//calendar
-  + '          <div class="calendar-separator" v-if="range&&no===1"><span>{{toTitle}}</span>'
-  + '          </div>'
+  + '          <div class="calendar-separator" v-if="range&&no===1"><span>{{toTitle}}</span></div>'
   + '        </template">'
   + '     </div>'//calendar-range
   + '     <div class="calendar-bottom" v-if="range"><a class="calendar-btn ok" @click="ok">{{okTitle}}</a>'
@@ -62,9 +73,15 @@ Vue.component('datepicker', {
     width: {
       default: 214
     },
-    time: {
+    currentTime: {
       type: String,
       default: ''
+    },
+    fromTime: {
+      type: Number
+    },
+    toTime: {
+      type: Number
     },
     //По умолчанию календар доступен для выбора
     disabled: {
@@ -76,14 +93,7 @@ Vue.component('datepicker', {
       type: Boolean,
       default: false
     },
-    startTime: {
-      type: Number
-    },
-    endTime: {
-      type: Number
-    },
-    maxRange: {
-//TODO
+    maxRange: {//TODO
     },
     clearable: {
       type: Boolean,
@@ -118,9 +128,11 @@ Vue.component('datepicker', {
       months2: [],
       date1: null,
       date2: null,
-
-      time1: this.parse(this.startTime, false) || this.parse(this.time, false),
-      time2: this.parse(this.endTime, true),
+      time: this.currentTime,
+      startTime: this.fromTime,
+      endTime: this.toTime,
+      time1: this.parse(this.fromTime, false) || this.parse(this.currentTime, false),
+      time2: this.parse(this.toTime, true),
       now1: this.parse(new Date(), false),
       now2: this.parse(new Date(), true),
       count: this.range ? 2 : 1 //кол-во календарей
@@ -128,6 +140,7 @@ Vue.component('datepicker', {
 
   },//data
   computed: {
+
     days: function() {
       var arrDays = []
       var lang_code = this.lang;
@@ -292,18 +305,24 @@ Vue.component('datepicker', {
   },//computed
   watch: {
     show: function(val) {
-//TODO
+
+      //this.hidePanel();
     },
     now1: function() {
+
       this.updateAll();
     },
     now2: function() {
+
       this.updateAll();
     }
   },
   methods: {
+    onBlur: function(param) {
+      console.log('lostFocus' + param);
+      //show = false;
+    },
     isShowYear: function(no) {
-      //console.log('isShowYear: ' + this['showYear'+no]);
       return this['showYear'+no];
     },
     //Получение набора массива дат для каленадря
@@ -403,7 +422,6 @@ Vue.component('datepicker', {
           start: this.parse(time, false),
           end: this.parse(new Date(), true)
       });
-      //console.log(ranges[0]);
       this.ranges = ranges;
 
     },
@@ -440,19 +458,11 @@ Vue.component('datepicker', {
         return;
       }
       self['now' + no] = new Date(item.time);
-      //console.log('now' + no + ' = ' +self['now' + no]);
       self['time' + no] = new Date(item.time);
-      //console.log('time' + no + ' = ' +self['time' + no]);
-      //console.log(self.range)
       if (!self.range) {
-        //console.log('self.time:' + self.time);
-        //console.log('item.time:' + item.time);
-//TODO debug
-
         self.time = self.getOutTime(item.time);
         self.show = false;
       } else if (!self.confirm) {
-        //console.log('!!!');
         self[no === 1 ? 'startTime' : 'endTime'] = self.getOutTime(item.time);
       }
     },
@@ -478,16 +488,11 @@ Vue.component('datepicker', {
     },
 
     getOutTime: function(time) {
-//TODO debug for select method
-
       var type = this.time ? typeof(this.time) : typeof(this.startTime);
-      //console.log(type);
       if (type === 'number') {
         return time.getTime();
       } else if (type === 'object') {
-        return new Date(time);
       } else {
-        //console.log(this.stringify(time));
         return this.stringify(time);
       }
     },
@@ -504,7 +509,6 @@ Vue.component('datepicker', {
         day = lastDay - i + 1;
         tmpTime = new Date(time.getFullYear(), time.getMonth(), day);
         tmpTime = this.parse(tmpTime, no === 2);
-//console.log(i + ' - ' + tmpTime + ' - ' + this.stringify(tmpTime));
         arr.push({
           status: this.getTimeStatus(tmpTime, no),
           title: this.stringify(tmpTime),
@@ -519,7 +523,6 @@ Vue.component('datepicker', {
       for (i = 1; i <= curDay; i++) {
         tmpTime = new Date(time.getFullYear(), time.getMonth(), i);
         tmpTime = this.parse(tmpTime, no === 2);
-//console.log(i + ' - ' + tmpTime + ' - ' + this.stringify(tmpTime));
         arr.push({
             status: this.getTimeStatus(tmpTime, no),
             title: this.stringify(tmpTime),
@@ -533,7 +536,6 @@ Vue.component('datepicker', {
       for (i = 1; arr.length < 42; i++) {
         tmpTime = new Date(time.getFullYear(), time.getMonth() + 1, i);
         tmpTime = this.parse(tmpTime, no === 2);
-//console.log(i + ' - ' + tmpTime + ' - ' + this.stringify(tmpTime));
         arr.push({
             status: this.getTimeStatus(tmpTime, no) || 'calendar-nextmonth',
             title: this.stringify(tmpTime),
@@ -688,12 +690,10 @@ Vue.component('datepicker', {
     changeYear: function(flag, no) {
       //"no" передаем либо 1 либо 2,
       var now = this['now' + no];//получаем значение now1 или now2
-      //console.log('now' + no + ': ' + this['now' + no]);
       now.setDate(1);//присваиваем now дату = 1-е число текщего месяца
       now.setFullYear(now.getFullYear() + flag);//смещаем дату по годам на величину flag
       no === 2 && now.setMonth(now.getMonth() + 1, 0);//если now2, то смещаем ее на конец месяца, за счет параметра 0
       this['now' + no] = new Date(now);//в поле now1/now2 пишем новую дату
-      //console.log('now' + no + ': ' + this['now' + no]);
       this.hidePanel();
     },
     //Сдвигаем месяц в now1 или now2 на величину flag
@@ -734,6 +734,7 @@ Vue.component('datepicker', {
     clear: function() {
       var self = this;
 //TODO - выдает предупреждение при клике на иконке с крестиком
+      self.time = null;
       //self.time1 = self.time2 = self.startTime = self.endTime = self.time = null;
       self.now1 = new Date();
       self.now2 = new Date();

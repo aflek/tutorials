@@ -8,15 +8,16 @@
 </head>
 <body>
     <div id="app">
-      <div>StartTime:{{startTime}}</div>
-      <div>EndTime:{{endTime}}</div>
-      <!--<div>Time:{{ time }}</div>-->
+      <div>From Time:{{fromTime}}</div>
+      <div>To Time:{{toTime}}</div>
+      <div>Time:{{ currentTime }}</div>
       <!--Задать lang="en" или "ru" Dafault - "en"-->
-      <datepicker lang="ru" format="dd-MM-yyyy" :time="time"></datepicker>
+      <!--dd-MM-yyyy - формат для ru-->
+      <datepicker lang="ru" format="yyyy-MM-dd" :current-time="currentTime"></datepicker>
       <!--Два календаря для выбора диаппазона-->
-      <datepicker lang="en" format="yyyy-MM-dd" :start-time="startTime" :end-time="endTime" range confirm :on-confirm="test"></datepicker>
+      <datepicker lang="en" format="yyyy-MM-dd" :from-time="fromTime" :to-time="toTime" range confirm :on-confirm="test"></datepicker>
       <!--Календарь с очисткой значения-->
-      <datepicker lang="cn" format="yyyy-MM-dd HH:mm:ss" clearable :time="time"></datepicker>
+      <datepicker lang="cn" format="yyyy-MM-dd HH:mm:ss" clearable :current-time="currentTime"></datepicker>
       <!--Недоступный элемент-->
       <datepicker disabled></datepicker>
     </div>
@@ -28,14 +29,15 @@
       new Vue({
         el: '#app',
         data: {
+          currentTime: '2017-03-20',
           time: '2017-03-19',
-          startTime: new Date('2017-03-16').getTime(),
-          endTime: new Date('2017-03-31').getTime()
+          fromTime: new Date('2017-03-16').getTime(),
+          toTime: new Date('2017-03-31').getTime()
         },
         methods:{
-          test:function(startTime,endTime){
-          console.log(startTime);
-          console.log(endTime);
+          test:function(fromTime,toTime){
+          console.log(fromTime);
+          console.log(toTime);
           }
         }
       });
